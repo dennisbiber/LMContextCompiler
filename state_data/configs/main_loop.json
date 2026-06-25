@@ -1,0 +1,133 @@
+{
+  "response_key": "response",
+
+  "llm_defaults": {
+    "max_tokens": 1024,
+    "temperature": 0.7,
+    "top_p": 0.9,
+    "top_k": 40,
+    "repeat_penalty": 1.1,
+    "seed": -1
+  },
+
+  "prompts": {
+
+    "input_parser": {
+      "system_prompt": {
+        "path": "state_data/prompts/system/input_parser.txt",
+        "variables": []
+      },
+      "variable_map": {
+        "latest_user_input": "latest_user_input",
+        "world_state":       "world_state"
+      },
+      "params": {
+        "max_tokens":     100,
+        "temperature":    0.2,
+        "top_p":          0.9,
+        "top_k":          20,
+        "repeat_penalty": 1.0
+      },
+      "hooks": {
+        "after": {
+          "state_updates": {
+            "input_meaning": "input_meaning",
+            "input_signal":  "input_signal"
+          }
+        }
+      }
+    },
+
+    "character_appraisal": {
+      "system_prompt": {
+        "path": "state_data/prompts/system/character_appraisal.txt",
+        "variables": []
+      },
+      "variable_map": {
+        "input_meaning": "input_meaning",
+        "input_signal":  "input_signal",
+        "persona_priors": "persona_priors",
+        "trust_level":   "trust_level"
+      },
+      "params": {
+        "max_tokens":     150,
+        "temperature":    0.4,
+        "top_p":          0.9,
+        "top_k":          30,
+        "repeat_penalty": 1.05
+      },
+      "hooks": {
+        "after": {
+          "state_updates": {
+            "internal_reaction": "internal_reaction",
+            "engagement_stance": "engagement_stance"
+          }
+        }
+      }
+    },
+
+    "response_strategy": {
+      "system_prompt": {
+        "path": "state_data/prompts/system/response_strategy.txt",
+        "variables": []
+      },
+      "variable_map": {
+        "internal_reaction": "internal_reaction",
+        "engagement_stance": "engagement_stance",
+        "input_signal":      "input_signal",
+        "current_mood":      "current_mood"
+      },
+      "params": {
+        "max_tokens":     150,
+        "temperature":    0.4,
+        "top_p":          0.9,
+        "top_k":          30,
+        "repeat_penalty": 1.05
+      },
+      "hooks": {
+        "after": {
+          "state_updates": {
+            "response_directive": "response_directive",
+            "response_register":  "response_register"
+          }
+        }
+      }
+    },
+
+    "response_generator": {
+      "system_prompt": {
+        "path": "state_data/prompts/system/response_generator.txt",
+        "variables": []
+      },
+      "variable_map": {
+        "response_directive": "response_directive",
+        "response_register":  "response_register",
+        "persona_priors":     "persona_priors",
+        "name":               "name"
+      },
+      "params": {
+        "max_tokens":     400,
+        "temperature":    0.78,
+        "top_p":          0.92,
+        "top_k":          45,
+        "repeat_penalty": 1.1
+      },
+      "end_result": "response",
+      "hooks": {
+        "after": {
+          "state_updates": {
+            "response": "response"
+          }
+        }
+      }
+    }
+
+  },
+
+  "order": {
+    "0": "input_parser",
+    "1": "character_appraisal",
+    "2": "response_strategy",
+    "3": "response_generator"
+  }
+}

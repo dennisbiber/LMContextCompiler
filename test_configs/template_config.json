@@ -1,0 +1,14 @@
+{
+  "_comment": "Test config template — copy and customize for each test run.",
+
+  "agents": ["your_agent_name"],
+  "scenario": "your_scenario_name",
+  "username": "your_username",
+  "chat_id": "your_unique_chat_id",
+
+  "enable_observation": true,
+  "print_turn_summary": true,
+
+  "_comment_first_input": "Optional. If set, this string is sent automatically on the first turn instead of waiting for user input.",
+  "first_input": null
+}

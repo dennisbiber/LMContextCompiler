@@ -1,0 +1,22 @@
+{
+  "execution_order": "topological",
+  "agent_types": {
+    "social_conversation": {
+      "graphs": {
+        "main_loop": {
+          "config": "state_data/configs/main_loop.json",
+          "trigger": {
+            "type": "always"
+          },
+          "depends_on": [],
+          "returns_response": true
+        }
+      },
+      "tiers": {
+        "0": [
+          "main_loop"
+        ]
+      }
+    }
+  }
+}

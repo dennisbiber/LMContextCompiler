@@ -1,0 +1,123 @@
+{
+  "_templates": "Three scenario templates — pick the one matching your agent topology.",
+
+  "TEMPLATE_1_SINGLE_SOCIAL_AGENT": {
+    "_comment": "One social conversation agent talking directly to the user. No back-end agents. No session_config needed.",
+
+    "id": "my_scenario",
+    "medium": "online text chat",
+    "world_state_seed": "Prose description of the world state at the start of this scenario. Third person. Factual. Sets the shared context all agents inhabit.",
+
+    "agents": [
+      {
+        "agent_id": "sara",
+        "user_facing": true,
+        "_comment": "Loads agents/sara.json. agent_type is read from the agent file."
+      }
+    ],
+
+    "_initial_queue_note": "initial_queue is not yet wired — AgentQueue initialises from persisted state. Reserved for future use.",
+
+    "_omitted": ["session_config — not needed for single-agent scenarios"]
+  },
+
+  "TEMPLATE_2_FORMAL_PLUS_TASK_AGENT": {
+    "_comment": "A user-facing formal/relay agent backed by one task-decomposition agent. session_config is required to name relay and task agent IDs explicitly, because both the relay role (front-end) and task role (back-end) cannot be inferred from user_facing alone when a back-end relay agent is also present.",
+
+    "id": "task_scenario",
+    "medium": "text interface",
+    "world_state_seed": "Prose description of the world context for this task scenario.",
+
+    "agents": [
+      {
+        "agent_id": "customer_rep",
+        "user_facing": true,
+        "_comment": "Front-end relay agent. Loads agents/customer_rep.json."
+      },
+      {
+        "agent_id": "task_decomposer",
+        "user_facing": false,
+        "_comment": "Back-end task agent. Loads agents/task_decomposer.json."
+      }
+    ],
+
+    "session_config": {
+      "_comment": "Explicit role naming for _post_turn_enqueue routing. relay_agent_id is the agent that relays signals to/from the user. task_agent_id is the primary back-end agent. Only needed when user_facing alone is ambiguous.",
+      "relay_agent_id": "customer_rep",
+      "task_agent_id": "task_decomposer"
+    },
+
+    "_initial_queue_note": "initial_queue is not yet wired — reserved for future use."
+  },
+
+  "TEMPLATE_3_MULTI_AGENT_SOCIAL": {
+    "_comment": "Multiple social agents sharing a conversation. All are user-facing. No back-end task agents. No session_config needed — user_facing drives routing.",
+
+    "id": "group_scenario",
+    "medium": "group text chat",
+    "world_state_seed": "Prose description of the shared world context all agents inhabit.",
+
+    "agents": [
+      {
+        "agent_id": "sara",
+        "user_facing": true,
+        "_comment": "First agent to speak by default (first in list sets _user_facing_agent)."
+      },
+      {
+        "agent_id": "derek",
+        "user_facing": true,
+        "_comment": "Second agent. Called explicitly via next_speaker='derek' in run_pipeline."
+      }
+    ],
+
+    "_routing_note": "In multi-social scenarios, pass next_speaker=<agent_id> to run_pipeline to control turn order. The first user_facing agent in the list is the default respondent.",
+
+    "_omitted": ["session_config — not needed when all agents are user-facing"]
+  },
+
+  "_field_reference": {
+    "id": {
+      "type": "string",
+      "required": true,
+      "written_to": "global:scenario_id",
+      "notes": "Unique identifier. Used for logging and observability."
+    },
+    "medium": {
+      "type": "string",
+      "required": true,
+      "written_to": "global:medium",
+      "notes": "Describes the communication channel. Injected into prompts. Examples: 'online text chat', 'voice call', 'in-person conversation'."
+    },
+    "world_state_seed": {
+      "type": "string",
+      "required": false,
+      "written_to": "global:world_state (once — never overwritten)",
+      "notes": "Prose describing the world at session start. Third person. Seeded once on first load; the Worldview system evolves it from there. Omit if world state is not relevant to this scenario."
+    },
+    "agents": {
+      "type": "array",
+      "required": false,
+      "written_to": "global:_session_agents, global:_user_facing_agents, global:_user_facing_agent",
+      "notes": "Roster of all agents in this scenario. Only written on first load — subsequent turns restore from persisted state. If omitted, caller must pass session_agents= to run_pipeline explicitly.",
+      "entry_fields": {
+        "agent_id": "string, required — must match the stem of an agents/<id>.json file",
+        "user_facing": "bool, required — true if this agent participates in the user-facing conversation",
+        "_comment": "string, optional — ignored by the loader, for human readability only"
+      }
+    },
+    "session_config": {
+      "type": "object",
+      "required": false,
+      "notes": "Only needed when _post_turn_enqueue cannot infer relay/task roles from user_facing alone. Typical case: a back-end relay agent sits between the user-facing agent and one or more task agents.",
+      "fields": {
+        "relay_agent_id": "string — agent that relays signals between back-end and user. Written to global:_relay_agent_id.",
+        "task_agent_id": "string — primary back-end task agent. Written to global:_task_agent_id."
+      }
+    },
+    "initial_queue": {
+      "type": "array",
+      "status": "NOT YET WIRED — reserved for future use",
+      "notes": "Intended to seed the AgentQueue at session start so the first turn can be agent-initiated rather than user-initiated. Currently AgentQueue.from_state() initialises from persisted state only."
+    }
+  }
+}

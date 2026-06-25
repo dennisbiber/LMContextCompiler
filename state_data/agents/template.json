@@ -1,0 +1,22 @@
+{
+  "name": "",
+  "agent_type": "",
+  "traits": [],
+  "likes": [],
+  "dislikes": [],
+  "skills": [],
+  "constraints": [],
+  "style": [],
+  "long_term_goals": [],
+  "entity_registry": {
+    "AgentName": { "role": "character", "description": "", "relationship_to_user": "" },
+    "UserName":  { "role": "user",      "description": "", "relationship_to_agent": "" }
+  },
+  "self_model": {
+    "private_beliefs": [],
+    "hidden_desires": [],
+    "conditional_constraints": []
+  },
+  "agent_scope": "",
+  "formal_constraints": []
+}
