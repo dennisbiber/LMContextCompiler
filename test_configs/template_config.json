@@ -5,6 +5,7 @@
   "scenario": "your_scenario_name",
   "username": "your_username",
   "chat_id": "your_unique_chat_id",
+  "model_name": "qwen3.5:9b",
 
   "enable_observation": true,
   "print_turn_summary": true,

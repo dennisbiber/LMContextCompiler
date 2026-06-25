@@ -218,8 +218,8 @@ class CorePipeline:
         response = pipeline.run(
             user_input = "Hello",
             chat_id    = "session_001",
-            character  = "sara",
-            username   = "dennis",
+            character  = "mary",
+            username   = "bob",
         )
     """
 
@@ -237,7 +237,7 @@ class CorePipeline:
         ollama_timeout:     float = 120.0,
     ):
         self.ollama_url = ollama_url or os.environ.get("OLLAMA_URL", "http://localhost:11434")
-        self.model      = model      or os.environ.get("OLLAMA_MODEL", "sara-base2:latest")
+        self.model      = model      or os.environ.get("OLLAMA_MODEL", "")
 
         data_root = os.environ.get("OWUI_STATE_DATA_ROOT", "./state_data")
 

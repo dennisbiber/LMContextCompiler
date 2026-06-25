@@ -39,6 +39,7 @@ AGENTS             = config["agents"]
 SCENARIO           = config["scenario"]
 USERNAME           = config["username"]
 CHAT_ID            = config["chat_id"]
+MODEL              = config["model_name"]
 FIRST_INPUT        = config.get("first_input", None)
 USER_FACING_AGENT  = config.get("user_facing_agent", AGENTS[-1])
 
@@ -54,7 +55,8 @@ sm = CorePipeline(
     agents_dir="./state_data/agents",
     scenario_dir="./state_data/scenarios",
     users_dir="./state_data/users",
-    session_dir="./sessions"
+    session_dir="./sessions",
+    model = MODEL
 )
 
 
